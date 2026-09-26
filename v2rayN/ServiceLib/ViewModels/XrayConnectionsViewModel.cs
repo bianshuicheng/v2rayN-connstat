@@ -21,12 +21,9 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
     public XrayConnectionsViewModel()
     {
         _config = AppManager.Instance.Config;
-        AutoRefresh = _config.ClashUIItem.ConnectionsAutoRefresh;
-
-        this.WhenAnyValue(
-           x => x.AutoRefresh,
-           y => y == true)
-               .Subscribe(c => { _config.ClashUIItem.ConnectionsAutoRefresh = AutoRefresh; });
+        // always start with auto refresh on: the stored setting is shared with
+        // the sing-box connections view and defaults to false there
+        AutoRefresh = true;
 
         _ = Task.Run(Run);
     }
@@ -80,6 +77,8 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
                         Network = "tcp",
                         Inbound = item.inbound,
                         Outbound = item.outbound,
+                        Process = item.process,
+                        ProcessPath = item.path,
                         DownSpeed = Utils.HumanFy((long)downSpeed) + "/s",
                         UpSpeed = Utils.HumanFy((long)upSpeed) + "/s",
                         DownTotal = Utils.HumanFy((long)item.downlink),

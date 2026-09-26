@@ -12,7 +12,8 @@
 
 | 能力 | 说明 |
 |---|---|
-| **每秒实时刷新** | 主机（域名）、网络、入站、出站、↓/↑实时速度、↓/↑累计流量、存活时长，9 列表格 |
+| **每秒实时刷新** | 进程（图标+名称）、主机（域名）、网络、入站、出站、↓/↑实时速度、↓/↑累计流量、存活时长，10 列表格 |
+| **进程列** | 每条连接显示发起进程的**图标 + 名称**（内核侧附带 PID 与完整路径）；图标自动提取并缓存，不卡界面 |
 | **主机过滤** | 顶部过滤框，输入关键字即时筛选连接 |
 | **自动刷新开关** | 顶部一键暂停/恢复刷新，方便看清楚某一条连接 |
 | **列宽自适应** | 列宽自动适配内容，长域名不遮挡 |
@@ -38,16 +39,18 @@
 
 | 文件 | 改动 |
 |---|---|
-| `v2rayN/ServiceLib/ViewModels/XrayConnectionsViewModel.cs` | **新增**。「Xray 连接」页 ViewModel：每秒轮询 metrics `connstat`，计算实时速度/累计/存活时长，支持过滤与自动刷新 |
-| `v2rayN/ServiceLib/Models/Dto/XrayConnectionModel.cs` | **新增**。连接行数据模型 |
-| `v2rayN/ServiceLib/Models/Dto/XrayConnStat.cs` | **新增**。connstat JSON 的 DTO |
-| `v2rayN/v2rayN/Views/XrayConnectionsView.xaml(.cs)` | **新增**。「Xray 连接」视图（9 列表格 + 过滤 + 自动刷新 + 自适应列宽） |
+| `v2rayN/ServiceLib/ViewModels/XrayConnectionsViewModel.cs` | **新增**。「Xray 连接」页 ViewModel：每秒轮询 metrics `connstat`，计算实时速度/累计/存活时长，支持过滤与自动刷新；展示进程信息（process/pid/path） |
+| `v2rayN/ServiceLib/Models/Dto/XrayConnectionModel.cs` | **新增**。连接行数据模型（含 process/pid/path 字段） |
+| `v2rayN/ServiceLib/Models/Dto/XrayConnStat.cs` | **新增**。connstat JSON 的 DTO（含 process/pid/path 字段） |
+| `v2rayN/v2rayN/Views/XrayConnectionsView.xaml(.cs)` | **新增**。「Xray 连接」视图（10 列表格：进程图标+名称 + 过滤 + 自动刷新 + 自适应列宽） |
+| `v2rayN/v2rayN/Converters/ProcessIconConverter.cs` | **新增**。进程图标转换器：`Icon.ExtractAssociatedIcon` 提取进程图标 + `ConcurrentDictionary` 缓存，避免每秒刷新时重复提取卡顿 |
+| `v2rayN/v2rayN/Common/SimpleViewLocator.cs` | **修复**。注册 `XrayConnectionsViewModel → XrayConnectionsView` 视图映射（缺失会导致「Xray 连接」页空白） |
 | `v2rayN/v2rayN/Views/MainWindow.xaml` | 三个布局各新增 `tabXrayConnections*` 标签页 |
 | `v2rayN/v2rayN/Views/MainWindow.xaml.cs` | 新标签页注入与可见性绑定（`ShowXrayConnectionsUI`）；「信息」页可见性改绑 `ShowXrayConnectionsUI` |
 | `v2rayN/ServiceLib/ViewModels/MainWindowViewModel.cs` | 新增 `ShowXrayConnectionsUI` 与 `XrayConnectionsViewModel` |
-| `v2rayN/ServiceLib/Resx/ResUI.resx / ResUI.zh-Hans.resx / ResUI.Designer.cs` | 新增 `TbXrayConnections`、`TbSortingInbound`、`TbSortingOutbound` 资源键 |
+| `v2rayN/ServiceLib/Resx/ResUI.resx / ResUI.zh-Hans.resx / ResUI.Designer.cs` | 新增 `TbXrayConnections`、`TbSortingInbound`、`TbSortingOutbound`、`TbSortingProcess` 资源键 |
 | `v2rayN/GlobalHotKeys/` | **并入**。`.gitmodules` 引用的 2dust/GlobalHotKeys 子模块源码（官方源码 zip 不含子模块内容，不并入则 `v2rayN.Desktop` 无法编译） |
-| `.github/workflows/release-connstat.yml` | **新增**。免签名多平台自动构建发布工作流 |
+| `.github/workflows/release-connstat.yml` | **新增**。多平台自动构建发布工作流：以官方包为底合并 + 各平台交叉编译补丁版 connstat xray 内核 |
 | `README.md` / `CONNSTAT.md` | **新增/替换**。本补丁的说明文档（原版说明在 `README-upstream.md`） |
 
 ## 🖥️ 平台差异说明

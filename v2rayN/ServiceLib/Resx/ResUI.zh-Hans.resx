@@ -1203,6 +1203,9 @@
   <data name="TbSortingOutbound" xml:space="preserve">
     <value>出站</value>
   </data>
+  <data name="TbSortingProcess" xml:space="preserve">
+    <value>进程</value>
+  </data>
   <data name="menuConnectionClose" xml:space="preserve">
     <value>关闭连接</value>
   </data>

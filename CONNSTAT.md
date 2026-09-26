@@ -7,7 +7,7 @@
 
 1. 重启 v2rayN（托盘退出再打开，或主界面「重启服务」），内核使用 connstat 补丁版 xray。
 2. 主界面出现独立的「**Xray 连接**」标签页：
-   - 列：**主机（域名）｜网络｜入站｜出站｜↓实时速度｜↑实时速度｜↓累计｜↑累计｜存活时长**
+   - 列：**进程（图标+名称）｜主机（域名）｜网络｜入站｜出站｜↓实时速度｜↑实时速度｜↓累计｜↑累计｜存活时长**
    - 每秒自动刷新；顶部有主机过滤框和「自动刷新」开关；列宽自适应
    - **TUN 模式开/关都有效**
 3. 「信息」标签页在 Xray 模式下保持可见。
@@ -17,14 +17,16 @@
 
 | 文件 | 改动 |
 |---|---|
-| `v2rayN/ServiceLib/ViewModels/XrayConnectionsViewModel.cs` | **新增**。Xray 专用连接页 VM：每秒轮询 metrics `connstat`，计算实时速度/累计/存活时长，支持过滤与自动刷新开关 |
-| `v2rayN/ServiceLib/Models/Dto/XrayConnectionModel.cs` | **新增**。连接行数据模型 |
-| `v2rayN/ServiceLib/Models/Dto/XrayConnStat.cs` | **新增**。connstat JSON 的 DTO |
-| `v2rayN/v2rayN/Views/XrayConnectionsView.xaml(.cs)` | **新增**。「Xray 连接」视图（9 列表格 + 过滤 + 自动刷新 + 自适应列宽） |
+| `v2rayN/ServiceLib/ViewModels/XrayConnectionsViewModel.cs` | **新增**。Xray 专用连接页 VM：每秒轮询 metrics `connstat`，计算实时速度/累计/存活时长，支持过滤与自动刷新开关；展示进程信息（process/pid/path），`AutoRefresh` 构造时默认开启（不读共享配置） |
+| `v2rayN/ServiceLib/Models/Dto/XrayConnectionModel.cs` | **新增**。连接行数据模型（含 process/pid/path 字段） |
+| `v2rayN/ServiceLib/Models/Dto/XrayConnStat.cs` | **新增**。connstat JSON 的 DTO（含 process/pid/path 字段） |
+| `v2rayN/v2rayN/Views/XrayConnectionsView.xaml(.cs)` | **新增**。「Xray 连接」视图（10 列表格：进程图标+名称 + 过滤 + 自动刷新 + 自适应列宽） |
+| `v2rayN/v2rayN/Converters/ProcessIconConverter.cs` | **新增**。进程图标转换器：`Icon.ExtractAssociatedIcon` 提取 + `ConcurrentDictionary` 缓存，避免每秒刷新重复提取 |
+| `v2rayN/v2rayN/Common/SimpleViewLocator.cs` | **修复**。注册 `XrayConnectionsViewModel → XrayConnectionsView` 映射（缺失会导致「Xray 连接」页空白） |
 | `v2rayN/v2rayN/Views/MainWindow.xaml` | 三个布局各新增 `tabXrayConnections*` 标签页 |
 | `v2rayN/v2rayN/Views/MainWindow.xaml.cs` | 新标签页的内容注入与可见性绑定（`ShowXrayConnectionsUI`）；「信息」标签页可见性改绑 `ShowXrayConnectionsUI`（修复 Xray 模式下信息页不可达） |
 | `v2rayN/ServiceLib/ViewModels/MainWindowViewModel.cs` | 新增 `ShowXrayConnectionsUI` 与 `XrayConnectionsViewModel` |
-| `v2rayN/ServiceLib/Resx/ResUI.resx / ResUI.zh-Hans.resx / ResUI.Designer.cs` | 新增 `TbXrayConnections`、`TbSortingInbound`、`TbSortingOutbound` 资源键 |
+| `v2rayN/ServiceLib/Resx/ResUI.resx / ResUI.zh-Hans.resx / ResUI.Designer.cs` | 新增 `TbXrayConnections`、`TbSortingInbound`、`TbSortingOutbound`、`TbSortingProcess` 资源键 |
 | `v2rayN/GlobalHotKeys/` | **并入**。`.gitmodules` 引用的 2dust/GlobalHotKeys 子模块源码（官方源码 zip 不含子模块内容，不并入则 `v2rayN.Desktop` 无法编译） |
 | `.github/workflows/release-connstat.yml` | **新增**。免签名多平台自动构建发布工作流（见下） |
 

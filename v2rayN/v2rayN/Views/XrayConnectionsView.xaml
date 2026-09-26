@@ -68,6 +68,22 @@
                     Binding="{Binding Host}"
                     ExName="Host"
                     Header="{x:Static resx:ResUI.TbSortingHost}" />
+                <DataGridTemplateColumn
+                    Width="180"
+                    Header="{x:Static resx:ResUI.TbSortingProcess}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image
+                                    Width="16"
+                                    Height="16"
+                                    Margin="0,0,4,0"
+                                    Source="{Binding ProcessPath, Converter={StaticResource ProcessIconConverter}}" />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Process}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <base:MyDGTextColumn
                     Width="90"
                     Binding="{Binding Network}"

@@ -15,6 +15,9 @@ public class XrayConnStatItem
     public string? dest { get; set; }
     public string? inbound { get; set; }
     public string? outbound { get; set; }
+    public string? process { get; set; }
+    public int pid { get; set; }
+    public string? path { get; set; }
     public ulong uplink { get; set; }
     public ulong downlink { get; set; }
 }

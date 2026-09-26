@@ -11,6 +11,8 @@ public class XrayConnectionModel
     public string? Network { get; set; }
     public string? Inbound { get; set; }
     public string? Outbound { get; set; }
+    public string? Process { get; set; }
+    public string? ProcessPath { get; set; }
     public string? DownSpeed { get; set; }
     public string? UpSpeed { get; set; }
     public string? DownTotal { get; set; }

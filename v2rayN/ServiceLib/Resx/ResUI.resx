@@ -1206,6 +1206,9 @@
   <data name="TbSortingOutbound" xml:space="preserve">
     <value>Outbound</value>
   </data>
+  <data name="TbSortingProcess" xml:space="preserve">
+    <value>Process</value>
+  </data>
   <data name="menuConnectionClose" xml:space="preserve">
     <value>Close Connection</value>
   </data>

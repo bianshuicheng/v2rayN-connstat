@@ -2951,6 +2951,15 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("TbSortingOutbound", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Process 的本地化字符串。
+        /// </summary>
+        public static string TbSortingProcess {
+            get {
+                return ResourceManager.GetString("TbSortingProcess", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 Core Type 的本地化字符串。
