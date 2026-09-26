@@ -1,0 +1,8 @@
+  正在确定要还原的项目…
+  已还原 E:\AI_DATA\zcode\v2rayn\v2rayN-7.24.9\v2rayN\ServiceLib.UdpTest\ServiceLib.UdpTest.csproj (用时 531 毫秒)。
+  已还原 E:\AI_DATA\zcode\v2rayn\v2rayN-7.24.9\v2rayN\ServiceLib\ServiceLib.csproj (用时 601 毫秒)。
+  已还原 E:\AI_DATA\zcode\v2rayn\v2rayN-7.24.9\v2rayN\v2rayN\v2rayN.csproj (用时 611 毫秒)。
+  ServiceLib.UdpTest -> E:\AI_DATA\zcode\v2rayn\v2rayN-7.24.9\v2rayN\ServiceLib.UdpTest\bin\Release\net10.0\ServiceLib.UdpTest.dll
+  ServiceLib -> E:\AI_DATA\zcode\v2rayn\v2rayN-7.24.9\v2rayN\ServiceLib\bin\Release\net10.0\ServiceLib.dll
+  v2rayN -> E:\AI_DATA\zcode\v2rayn\v2rayN-7.24.9\v2rayN\v2rayN\bin\Release\net10.0-windows10.0.19041.0\win-x64\v2rayN.dll
+  v2rayN -> E:\AI_DATA\zcode\v2rayn\publish\
