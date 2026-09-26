@@ -7,6 +7,11 @@ on:
         description: 'Release tag to publish to, e.g. v7.24.9-connstat'
         required: true
         type: string
+      base_version:
+        description: 'Upstream v2rayN version used as package base, e.g. 7.24.9'
+        required: false
+        default: '7.24.9'
+        type: string
 
 permissions:
   contents: write
@@ -18,65 +23,95 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { target: windows, arch: x64,   rid: win-x64,     os: windows-latest, project: './v2rayN/v2rayN.csproj',                 ext: '-p:EnableWindowsTargeting=true' }
-          - { target: windows, arch: arm64, rid: win-arm64,   os: windows-latest, project: './v2rayN/v2rayN.csproj',                 ext: '-p:EnableWindowsTargeting=true' }
-          - { target: linux,   arch: x64,   rid: linux-x64,   os: ubuntu-24.04,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '' }
-          - { target: linux,   arch: arm64, rid: linux-arm64, os: ubuntu-24.04,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '' }
-          - { target: macos,   arch: x64,   rid: osx-x64,     os: macos-latest,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '' }
-          - { target: macos,   arch: arm64, rid: osx-arm64,   os: macos-latest,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '' }
+          - { target: windows, arch: x64,   rid: win-x64,     os: windows-latest, project: './v2rayN/v2rayN.csproj',                 ext: '-p:EnableWindowsTargeting=true', goos: windows, goarch: amd64, xraybin: xray.exe, pkg: v2rayN-windows-64 }
+          - { target: windows, arch: arm64, rid: win-arm64,   os: windows-latest, project: './v2rayN/v2rayN.csproj',                 ext: '-p:EnableWindowsTargeting=true', goos: windows, goarch: arm64, xraybin: xray.exe, pkg: v2rayN-windows-arm64 }
+          - { target: linux,   arch: x64,   rid: linux-x64,   os: ubuntu-24.04,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '',                               goos: linux,   goarch: amd64, xraybin: xray,     pkg: v2rayN-linux-64 }
+          - { target: linux,   arch: arm64, rid: linux-arm64, os: ubuntu-24.04,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '',                               goos: linux,   goarch: arm64, xraybin: xray,     pkg: v2rayN-linux-arm64 }
+          - { target: macos,   arch: x64,   rid: osx-x64,     os: macos-latest,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '',                               goos: darwin,  goarch: amd64, xraybin: xray,     pkg: v2rayN-macos-64 }
+          - { target: macos,   arch: arm64, rid: osx-arm64,   os: macos-latest,   project: './v2rayN.Desktop/v2rayN.Desktop.csproj', ext: '',                               goos: darwin,  goarch: arm64, xraybin: xray,     pkg: v2rayN-macos-arm64 }
     runs-on: ${{ matrix.os }}
     env:
-      PKG_TARGET: ${{ matrix.target }}
-      PKG_ARCH: ${{ matrix.arch }}
+      PKG_NAME: ${{ matrix.pkg }}
+      XRAY_BIN: ${{ matrix.xraybin }}
     steps:
-      - name: Checkout
+      - name: Checkout v2rayN-connstat
         uses: actions/checkout@v7
+
+      - name: Checkout xray-core-connstat (patched core)
+        uses: actions/checkout@v7
+        with:
+          repository: bianshuicheng/xray-core-connstat
+          path: xray-core-connstat
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.1xx
 
+      - name: Setup Go for patched xray core
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: xray-core-connstat/go.mod
+          cache-dependency-path: xray-core-connstat/go.sum
+
       - name: Build v2rayN
         shell: bash
         working-directory: ./v2rayN
-        run: dotnet publish ${{ matrix.project }} -c Release -r ${{ matrix.rid }} -p:SelfContained=true ${{ matrix.ext }} -o output
+        run: dotnet publish ${{ matrix.project }} -c Release -r ${{ matrix.rid }} -p:SelfContained=true ${{ matrix.ext }} -o ../appout
 
       - name: Build AmazTool
         shell: bash
         working-directory: ./v2rayN
-        run: dotnet publish ./AmazTool/AmazTool.csproj -c Release -r ${{ matrix.rid }} -p:SelfContained=true -p:PublishTrimmed=true ${{ matrix.ext }} -o output
+        run: dotnet publish ./AmazTool/AmazTool.csproj -c Release -r ${{ matrix.rid }} -p:SelfContained=true -p:PublishTrimmed=true ${{ matrix.ext }} -o ../amaztoolout
 
-      - name: Remove debug symbols
+      - name: Build patched xray core
         shell: bash
-        run: find output -type f -name '*.pdb' -delete
+        working-directory: ./xray-core-connstat
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags "-s -w -buildid=" -o "../xrayout/${XRAY_BIN}" ./main
 
-      - name: Compute package name
+      - name: Download upstream package base
+        shell: bash
+        env:
+          BASE_VER: ${{ inputs.base_version }}
+        run: |
+          mkdir -p basezip extract
+          curl -fL --retry 3 -o "basezip/base.zip" "https://github.com/2dust/v2rayN/releases/download/${BASE_VER}/${PKG_NAME}.zip"
+
+      - name: Extract package base
         shell: bash
         run: |
-          case "${PKG_TARGET}-${PKG_ARCH}" in
-            windows-x64)   name=v2rayN-windows-64 ;;
-            windows-arm64) name=v2rayN-windows-arm64 ;;
-            linux-x64)     name=v2rayN-linux-64 ;;
-            linux-arm64)   name=v2rayN-linux-arm64 ;;
-            macos-x64)     name=v2rayN-macos-64 ;;
-            macos-arm64)   name=v2rayN-macos-arm64 ;;
-            *) echo "unknown target/arch: ${PKG_TARGET}-${PKG_ARCH}"; exit 1 ;;
-          esac
-          echo "PKG_NAME=${name}" >> "$GITHUB_ENV"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            powershell -NoProfile -Command "Expand-Archive -Path basezip/base.zip -DestinationPath extract"
+          else
+            unzip -q basezip/base.zip -d extract
+          fi
+          ROOT_DIR=$(find extract -mindepth 1 -maxdepth 1 -type d | head -n 1)
+          echo "ROOT_DIR=${ROOT_DIR}" >> "$GITHUB_ENV"
+          echo "package base root: ${ROOT_DIR}"
+
+      - name: Merge patched app and cores into package
+        shell: bash
+        run: |
+          # app binaries (overwrite upstream app files, keep upstream bin/cores and geo data)
+          cp -rf appout/. "${ROOT_DIR}/"
+          cp -f amaztoolout/AmazTool* "${ROOT_DIR}/" 2>/dev/null || true
+          # patched connstat xray core
+          cp -f "xrayout/${XRAY_BIN}" "${ROOT_DIR}/bin/xray/${XRAY_BIN}"
 
       - name: Package zip (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: Compress-Archive -Path output/* -DestinationPath "$env:PKG_NAME.zip" -CompressionLevel Fastest
+        run: Compress-Archive -Path "$env:ROOT_DIR" -DestinationPath "$env:PKG_NAME.zip" -CompressionLevel Optimal
 
       - name: Package zip (Linux/macOS)
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          cd output
-          zip -9 -r "../${PKG_NAME}.zip" .
-          cd ..
+          cd extract
+          zip -9 -r "../${PKG_NAME}.zip" "$(basename "${ROOT_DIR}")"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v7
@@ -102,6 +137,6 @@ jobs:
           TAG: ${{ inputs.release_tag }}
         run: |
           gh release view "$TAG" >/dev/null 2>&1 || \
-            gh release create "$TAG" --title "$TAG" --notes "v2rayN 7.24.9 + connstat 补丁 多平台自动构建（免签名版）。Windows 包含「Xray 连接」标签页；linux/macos 为 v2rayN.Desktop（Avalonia）界面，不含该标签页。"
+            gh release create "$TAG" --title "$TAG" --notes "v2rayN 7.24.9 + connstat 补丁 多平台自动构建。完整包 = 官方同款结构 + 补丁版应用 + 补丁版 connstat xray 内核（bin/xray/）。Windows 包含「Xray 连接」标签页；linux/macos 为 v2rayN.Desktop（Avalonia）界面，不含该标签页。"
           gh release upload "$TAG" pkgs/*.zip --clobber
           echo "done"
