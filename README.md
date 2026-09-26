@@ -1,80 +1,73 @@
-# v2rayN
+# v2rayN-connstat
 
-### A GUI client for Windows, Linux and macOS. Support [Xray](https://github.com/XTLS/Xray-core) and [sing-box](https://github.com/SagerNet/sing-box) and [others](https://github.com/2dust/v2rayN/wiki/List-of-supported-cores)
+**带「Xray 连接」监控页的 v2rayN** —— 基于 [2dust/v2rayN](https://github.com/2dust/v2rayN) 7.24.9 补丁修改。
 
-[![CodeFactor](https://www.codefactor.io/repository/github/2dust/v2rayn/badge)](https://www.codefactor.io/repository/github/2dust/v2rayn)
-[![Release](https://img.shields.io/github/v/release/2dust/v2rayN?logo=github&label=Release)](https://github.com/2dust/v2rayN/releases)
-[![Downloads](https://img.shields.io/github/downloads/2dust/v2rayN/latest/total?logo=github&label=Downloads)](https://github.com/2dust/v2rayN/releases)
-[![Telegram](https://img.shields.io/badge/Telegram-Chat-26A5E4?logo=telegram)](https://t.me/v2rayn)
- 
-[![Windows](https://img.shields.io/badge/Windows-supported-0078D6?logo=windows)](https://github.com/2dust/v2rayN) 
-[![Linux](https://img.shields.io/badge/Linux-supported-FCC624?logo=linux&logoColor=000)](https://github.com/2dust/v2rayN) 
-[![macOS](https://img.shields.io/badge/macOS-supported-000000?logo=apple)](https://github.com/2dust/v2rayN) 
-[![GPG Signed](https://img.shields.io/badge/GPG-signed-4B32C3?logo=gnuprivacyguard)](https://github.com/2dust/v2rayN)
+原版 v2rayN 在 Xray 内核模式下看不到每条连接的信息（「当前连接」页只支持 sing-box）。本补丁新增了独立的「**Xray 连接**」标签页：每条连接的**目标域名、实时上下行速度、累计流量、存活时长**，每秒刷新，一目了然。
 
+> 内核侧请配合 → [xray-core-connstat](https://github.com/bianshuicheng/xray-core-connstat)（提供 connstat 连接监控数据的补丁版 Xray）
 
 ---
 
-## Download / 下载
+## ✨ 新功能：独立「Xray 连接」标签页
 
-Download the latest release here:
+| 能力 | 说明 |
+|---|---|
+| **每秒实时刷新** | 主机（域名）、网络、入站、出站、↓/↑实时速度、↓/↑累计流量、存活时长，9 列表格 |
+| **主机过滤** | 顶部过滤框，输入关键字即时筛选连接 |
+| **自动刷新开关** | 顶部一键暂停/恢复刷新，方便看清楚某一条连接 |
+| **列宽自适应** | 列宽自动适配内容，长域名不遮挡 |
+| **TUN 模式可用** | 数据来自内核 connstat 补丁，TUN 模式开/关都能统计 |
+| **修复「信息」页** | Xray 模式下「信息」标签页保持可见（原版在该模式下不可达） |
 
-在这里下载最新版本：
+原有的「当前连接」标签页**保持官方 7.24.9 原样**，继续服务于 sing-box 内核，与 Xray 互不干扰。
 
-[https://github.com/2dust/v2rayN/releases](https://github.com/2dust/v2rayN/releases)
+## 📥 下载
 
+到 [Releases](https://github.com/bianshuicheng/v2rayN-connstat/releases) 下载：
 
-> [!TIP]
-> v2rayN is the desktop version. For the mobile version, please visit the v2rayNG \
-> v2rayN 是电脑版，手机版请访问 v2rayNG
->
-> https://github.com/2dust/v2rayNG
+- `v2rayN.exe` —— Windows x64 自包含单文件版（.NET 10，含「Xray 连接」标签页）
+- 多平台包（Windows / Linux / macOS × x64 / arm64）：在 Actions 页面运行 **`release connstat packages`** 工作流（填入 release_tag），自动构建并发布到对应 Release
 
----
+## 🚀 快速开始
 
-## Documentation / 使用文档
+1. 下载本仓库 Release 的 `v2rayN.exe`
+2. 下载 [xray-core-connstat](https://github.com/bianshuicheng/xray-core-connstat) 的 `xray-connstat.exe`，替换 v2rayN 目录下的 `bin\xray\xray.exe`
+3. 重启 v2rayN → 主界面出现「**Xray 连接**」标签页，开启自动刷新即可看到每条连接的实时监控
 
-Read the Wiki for usage guides and configuration details.
+## 🔧 与原版的区别
 
-请阅读 Wiki 获取使用说明和配置教程。
+| 文件 | 改动 |
+|---|---|
+| `v2rayN/ServiceLib/ViewModels/XrayConnectionsViewModel.cs` | **新增**。「Xray 连接」页 ViewModel：每秒轮询 metrics `connstat`，计算实时速度/累计/存活时长，支持过滤与自动刷新 |
+| `v2rayN/ServiceLib/Models/Dto/XrayConnectionModel.cs` | **新增**。连接行数据模型 |
+| `v2rayN/ServiceLib/Models/Dto/XrayConnStat.cs` | **新增**。connstat JSON 的 DTO |
+| `v2rayN/v2rayN/Views/XrayConnectionsView.xaml(.cs)` | **新增**。「Xray 连接」视图（9 列表格 + 过滤 + 自动刷新 + 自适应列宽） |
+| `v2rayN/v2rayN/Views/MainWindow.xaml` | 三个布局各新增 `tabXrayConnections*` 标签页 |
+| `v2rayN/v2rayN/Views/MainWindow.xaml.cs` | 新标签页注入与可见性绑定（`ShowXrayConnectionsUI`）；「信息」页可见性改绑 `ShowXrayConnectionsUI` |
+| `v2rayN/ServiceLib/ViewModels/MainWindowViewModel.cs` | 新增 `ShowXrayConnectionsUI` 与 `XrayConnectionsViewModel` |
+| `v2rayN/ServiceLib/Resx/ResUI.resx / ResUI.zh-Hans.resx / ResUI.Designer.cs` | 新增 `TbXrayConnections`、`TbSortingInbound`、`TbSortingOutbound` 资源键 |
+| `v2rayN/GlobalHotKeys/` | **并入**。`.gitmodules` 引用的 2dust/GlobalHotKeys 子模块源码（官方源码 zip 不含子模块内容，不并入则 `v2rayN.Desktop` 无法编译） |
+| `.github/workflows/release-connstat.yml` | **新增**。免签名多平台自动构建发布工作流 |
+| `README.md` / `CONNSTAT.md` | **新增/替换**。本补丁的说明文档（原版说明在 `README-upstream.md`） |
 
-[https://github.com/2dust/v2rayN/wiki](https://github.com/2dust/v2rayN/wiki)
+## 🖥️ 平台差异说明
 
----
+- 「Xray 连接」标签页属于 **Windows WPF 界面**（`v2rayN/v2rayN.csproj`）。
+- Linux / macOS 包使用 `v2rayN.Desktop`（Avalonia）界面，**不含该标签页**；这两个平台仍可通过 xray 内核的 metrics 端口或 `connstat-view` 终端查看器使用连接监控。
 
-## Supported Platforms / 支持平台
+## 🛠️ 从源码编译（Windows）
 
-| Platform / 平台 | x64 | x86 | arm64 | riscv64 | loong64 |
-| --- | --- | --- | --- | --- | --- |
-| Windows | ✅ | ✅ | ✅ | - | - |
-| Linux | ✅ | - | ✅ | ✅ | ✅ |
-| macOS | ✅ | - | ✅ | - | - |
-
-Minimum OS requirements: [Release files introduction](https://github.com/2dust/v2rayN/wiki/Release-files-introduction) / 最低系统要求：[发布文件介绍](https://github.com/2dust/v2rayN/wiki/Release-files-introduction)
-
----
-
-## GPG Verification / GPG 签名校验
-
-Release files are signed with GPG to verify authenticity and integrity, helping prevent mirror, ISP, or CDN hijacking.
-
-发布文件已使用 GPG 签名，可用于校验文件真实性与完整性，预防镜像站、运营商或 CDN 劫持。
-
-### Fingerprint / 公钥指纹
-
-```text
-7694 5E9F 3E9A 168F 8070 F195 805D 661C
-134D FAF6 8903 C199 463C 31E5 AE90 3AE0
+```bat
+dotnet publish v2rayN\v2rayN.csproj -c Release -r win-x64 --self-contained true -o publish
 ```
 
----
+## 🤖 多平台自动构建
 
-## Community / 社区
+- 推送到 `master` 自动触发上游 `build-windows` / `build-linux` / `build-macos`（Windows/Linux/macOS × x64/arm64 编译验证，产物在 Actions Artifacts）。
+- Actions → **`release connstat packages`** → 填 `release_tag`（如 `v7.24.9-connstat`）→ Run：自动构建六个平台的 zip 包并发布到对应 Release（免签名，不依赖上游需要 GPG 密钥的发布流程）。
 
-Telegram Group / Telegram 群组：
+## 🙏 致谢与许可
 
-[https://t.me/v2rayN](https://t.me/v2rayN)
-
-Telegram Channel / Telegram 频道：
-
-[https://t.me/github_2dust](https://t.me/github_2dust)
+- 上游项目：[2dust/v2rayN](https://github.com/2dust/v2rayN)
+- 内核补丁：[xray-core-connstat](https://github.com/bianshuicheng/xray-core-connstat)
+- 许可证与上游一致：[GPL-3.0](LICENSE)，本补丁改动同样以 GPL-3.0 发布
