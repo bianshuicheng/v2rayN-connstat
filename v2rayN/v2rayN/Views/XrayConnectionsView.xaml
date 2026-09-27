@@ -30,6 +30,19 @@
                 materialDesign:TextFieldAssist.HasClearButton="True"
                 Style="{StaticResource DefTextBox}" />
 
+            <ComboBox
+                x:Name="cmbDnsFilter"
+                Width="150"
+                Margin="{StaticResource MarginLeftRight8}"
+                VerticalContentAlignment="Center"
+                SelectedValuePath="Tag"
+                Style="{StaticResource DefComboBox}"
+                ToolTip="{x:Static resx:ResUI.TbDnsFilterDns}">
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbDnsFilterAll}" Tag="all" />
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbDnsFilterDns}" Tag="dns" />
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbDnsFilterApp}" Tag="app" />
+            </ComboBox>
+
             <Button
                 x:Name="btnAutofitColumnWidth"
                 Width="24"
@@ -68,10 +81,11 @@
                     Binding="{Binding Host}"
                     ExName="Host"
                     Header="{x:Static resx:ResUI.TbSortingHost}" />
-                <DataGridTemplateColumn
+                <base:MyDGTemplateColumn
                     Width="180"
+                    ExName="Process"
                     Header="{x:Static resx:ResUI.TbSortingProcess}">
-                    <DataGridTemplateColumn.CellTemplate>
+                    <base:MyDGTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Image
@@ -82,23 +96,8 @@
                                 <TextBlock VerticalAlignment="Center" Text="{Binding Process}" />
                             </StackPanel>
                         </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <base:MyDGTextColumn
-                    Width="90"
-                    Binding="{Binding Network}"
-                    ExName="Network"
-                    Header="{x:Static resx:ResUI.TbSortingNetwork}" />
-                <base:MyDGTextColumn
-                    Width="110"
-                    Binding="{Binding Inbound}"
-                    ExName="Inbound"
-                    Header="{x:Static resx:ResUI.TbSortingInbound}" />
-                <base:MyDGTextColumn
-                    Width="110"
-                    Binding="{Binding Outbound}"
-                    ExName="Outbound"
-                    Header="{x:Static resx:ResUI.TbSortingOutbound}" />
+                    </base:MyDGTemplateColumn.CellTemplate>
+                </base:MyDGTemplateColumn>
                 <base:MyDGTextColumn
                     Width="90"
                     Binding="{Binding DownSpeed}"
@@ -119,6 +118,21 @@
                     Binding="{Binding UpTotal}"
                     ExName="UpTotal"
                     Header="{x:Static resx:ResUI.TbSortingUpTraffic}" />
+                <base:MyDGTextColumn
+                    Width="90"
+                    Binding="{Binding Network}"
+                    ExName="Network"
+                    Header="{x:Static resx:ResUI.TbSortingNetwork}" />
+                <base:MyDGTextColumn
+                    Width="110"
+                    Binding="{Binding Inbound}"
+                    ExName="Inbound"
+                    Header="{x:Static resx:ResUI.TbSortingInbound}" />
+                <base:MyDGTextColumn
+                    Width="110"
+                    Binding="{Binding Outbound}"
+                    ExName="Outbound"
+                    Header="{x:Static resx:ResUI.TbSortingOutbound}" />
                 <base:MyDGTextColumn
                     Width="100"
                     Binding="{Binding Elapsed}"

@@ -14,6 +14,7 @@ public class XrayConnectionModel
     public string? Outbound { get; set; }
     public string? Process { get; set; }
     public string? ProcessPath { get; set; }
+    public bool IsDns { get; set; }
     public string? DownSpeed { get; set; }
     public string? UpSpeed { get; set; }
     public string? DownTotal { get; set; }

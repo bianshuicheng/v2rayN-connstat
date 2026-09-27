@@ -1209,6 +1209,15 @@
   <data name="TbSortingProcess" xml:space="preserve">
     <value>Process</value>
   </data>
+  <data name="TbDnsFilterAll" xml:space="preserve">
+    <value>All connections</value>
+  </data>
+  <data name="TbDnsFilterDns" xml:space="preserve">
+    <value>DNS traffic</value>
+  </data>
+  <data name="TbDnsFilterApp" xml:space="preserve">
+    <value>Apps (non-DNS)</value>
+  </data>
   <data name="menuConnectionClose" xml:space="preserve">
     <value>Close Connection</value>
   </data>

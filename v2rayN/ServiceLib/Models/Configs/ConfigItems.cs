@@ -218,6 +218,7 @@ public class ClashUIItem
     public bool ConnectionsAutoRefresh { get; set; }
     public int ConnectionsRefreshInterval { get; set; } = 2;
     public List<ColumnItem> ConnectionsColumnItem { get; set; }
+    public List<ColumnItem>? XrayConnectionsColumnItem { get; set; }
 }
 
 [Serializable]

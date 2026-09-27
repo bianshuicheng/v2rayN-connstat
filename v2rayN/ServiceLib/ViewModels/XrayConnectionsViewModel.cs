@@ -19,6 +19,13 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
     [Reactive]
     public partial string HostFilter { get; set; }
 
+    /// <summary>
+    /// "all" | "dns" | "app" - whether to show every connection, only DNS
+    /// traffic, or only application traffic (DNS hidden).
+    /// </summary>
+    [Reactive]
+    public partial string DnsFilter { get; set; }
+
     [Reactive]
     public partial bool AutoRefresh { get; set; }
 
@@ -31,6 +38,7 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
         // always start with auto refresh on: the stored setting is shared with
         // the sing-box connections view and defaults to false there
         AutoRefresh = true;
+        DnsFilter = "all";
 
         _ = Task.Run(Run);
     }
@@ -92,7 +100,16 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
             _last[idStr] = (item.uplink, item.downlink);
 
             var host = item.dest ?? string.Empty;
+            var isDns = IsDnsConnection(item.inbound, item.outbound, host);
             if (HostFilter.IsNotEmpty() && !host.Contains(HostFilter))
+            {
+                continue;
+            }
+            if (DnsFilter == "dns" && !isDns)
+            {
+                continue;
+            }
+            if (DnsFilter == "app" && isDns)
             {
                 continue;
             }
@@ -106,6 +123,7 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
                 Outbound = item.outbound,
                 Process = item.process,
                 ProcessPath = item.path,
+                IsDns = isDns,
                 DownSpeed = Utils.HumanFy((long)downSpeed) + "/s",
                 UpSpeed = Utils.HumanFy((long)upSpeed) + "/s",
                 DownTotal = Utils.HumanFy((long)item.downlink),
@@ -155,7 +173,16 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
             _last[idStr] = (item.upload, item.download);
 
             var host = $"{(item.metadata.host.IsNullOrEmpty() ? item.metadata.destinationIP : item.metadata.host)}:{item.metadata.destinationPort}";
+            var isDns = IsDnsConnection(null, null, host);
             if (HostFilter.IsNotEmpty() && !host.Contains(HostFilter))
+            {
+                continue;
+            }
+            if (DnsFilter == "dns" && !isDns)
+            {
+                continue;
+            }
+            if (DnsFilter == "app" && isDns)
             {
                 continue;
             }
@@ -170,6 +197,7 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
                 Outbound = string.Join("->", item.chains ?? []),
                 Process = item.metadata.process,
                 ProcessPath = item.metadata.processPath,
+                IsDns = isDns,
                 DownSpeed = Utils.HumanFy((long)downSpeed) + "/s",
                 UpSpeed = Utils.HumanFy((long)upSpeed) + "/s",
                 DownTotal = Utils.HumanFy((long)item.download),
@@ -196,5 +224,29 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
             _firstSeen.Remove(deadId);
             _last.Remove(deadId);
         }
+    }
+
+    /// <summary>
+    /// A connection counts as DNS when it talks to a DNS port, or when either
+    /// tag belongs to the kernel's own DNS plumbing (the "dns" outbound,
+    /// v2rayN's "dns-module" DoH inbound, "direct-dns-N" direct DNS inbound).
+    /// Those connections originate inside the core itself, which is exactly
+    /// why they carry no process name.
+    /// </summary>
+    private static bool IsDnsConnection(string? inbound, string? outbound, string host)
+    {
+        if (host.EndsWith(":53"))
+        {
+            return true;
+        }
+        if (inbound.IsNotEmpty() && inbound.Contains("dns", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        if (outbound.IsNotEmpty() && outbound.Contains("dns", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
     }
 }

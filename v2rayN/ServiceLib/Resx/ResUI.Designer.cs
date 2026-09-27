@@ -2960,6 +2960,33 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("TbSortingProcess", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 All connections 的本地化字符串。
+        /// </summary>
+        public static string TbDnsFilterAll {
+            get {
+                return ResourceManager.GetString("TbDnsFilterAll", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 DNS traffic 的本地化字符串。
+        /// </summary>
+        public static string TbDnsFilterDns {
+            get {
+                return ResourceManager.GetString("TbDnsFilterDns", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Apps (non-DNS) 的本地化字符串。
+        /// </summary>
+        public static string TbDnsFilterApp {
+            get {
+                return ResourceManager.GetString("TbDnsFilterApp", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 Core Type 的本地化字符串。
