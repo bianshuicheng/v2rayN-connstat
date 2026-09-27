@@ -73,6 +73,7 @@ dotnet publish v2rayN\v2rayN.csproj -c Release -r win-x64 --self-contained true 
 
 ## 📝 更新记录
 
+- **2026-09-27（v6.1）**：DNS 过滤默认值改为**「应用连接（非DNS）」**——默认隐藏内核 DNS 通道噪音，需要看 DNS 解析时手动切回「DNS 流量」或「全部连接」
 - **2026-09-27（v6）**
   - **DNS 流量过滤**：新增三档筛选——**全部连接 / 仅 DNS 流量 / 仅应用连接（非 DNS）**。DNS 判定规则：目标端口 `:53`，或入站/出站 tag 属于内核 DNS 通道（`dns` 出站、`dns-module` DoH 入站、`direct-dns-N` 直连 DNS 入站）
   - **列宽记忆**：「Xray 连接」表格的列配置持久化保存，重启 v2rayN 后自动恢复上次调整的列宽

@@ -38,7 +38,8 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
         // always start with auto refresh on: the stored setting is shared with
         // the sing-box connections view and defaults to false there
         AutoRefresh = true;
-        DnsFilter = "all";
+        // default to application traffic: DNS plumbing is usually noise
+        DnsFilter = "app";
 
         _ = Task.Run(Run);
     }
