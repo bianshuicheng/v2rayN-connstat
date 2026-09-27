@@ -69,6 +69,16 @@ dotnet publish v2rayN\v2rayN.csproj -c Release -r win-x64 --self-contained true 
 - 推送到 `master` 自动触发上游 `build-windows` / `build-linux` / `build-macos`（Windows/Linux/macOS × x64/arm64 编译验证，产物在 Actions Artifacts）。
 - Actions → **`release connstat packages`** → 填 `release_tag`（如 `v7.24.9-connstat`）→ Run：自动构建六个平台的 zip 包并发布到对应 Release（免签名，不依赖上游需要 GPG 密钥的发布流程）。
 
+## 📝 更新记录
+
+- **2026-09-27（v5）**
+  - **修复 TUN 模式下「Xray 连接」页不刷新**：开启 TUN 时 v2rayN 以 sing-box 作为前置核，界面误判"运行内核不是 Xray"导致本页停止轮询；现在固定轮询 connstat 端点，TUN 开/关都正常显示
+  - **新增 sing-box 主核回退**：主核为纯 sing-box（无 xray）时，自动改读 sing-box 的 clash API `/connections`（同样带进程名/路径元数据），本页在 sing-box 模式下也有完整的连接监控数据
+  - 连接 Id 改为字符串（兼容 clash API 的 UUID）；新增连接类型（Type）显示；轮询逻辑重构为 Xray / sing-box 双数据源 + 死连接统一清理
+- **2026-09-26（v4）**：新增「进程」列（图标 + 名称，内核附带 PID/路径；`ProcessIconConverter` 图标提取 + 缓存）
+- **2026-09-26（v3）**：修复视图注册缺失导致的「Xray 连接」页空白；自动刷新改为默认开启
+- **2026-09-26（初版）**：独立「Xray 连接」标签页，基于 xray-core-connstat 的 connstat 实时连接监控
+
 ## 🙏 致谢与许可
 
 - 上游项目：[2dust/v2rayN](https://github.com/2dust/v2rayN)

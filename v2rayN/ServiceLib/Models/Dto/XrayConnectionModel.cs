@@ -6,9 +6,10 @@ namespace ServiceLib.Models.Dto;
 /// </summary>
 public class XrayConnectionModel
 {
-    public long Id { get; set; }
+    public string? Id { get; set; }
     public string? Host { get; set; }
     public string? Network { get; set; }
+    public string? Type { get; set; }
     public string? Inbound { get; set; }
     public string? Outbound { get; set; }
     public string? Process { get; set; }
