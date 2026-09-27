@@ -73,6 +73,12 @@ dotnet publish v2rayN\v2rayN.csproj -c Release -r win-x64 --self-contained true 
 
 ## 📝 更新记录
 
+- **2026-09-27（v7）**
+  - **修复速度/流量数值放大 1024 倍**：`Utils.HumanFy` 的入参单位是 KB（上游调用方都先除以 1024），本页此前直接把字节传了进去，于是真实的 `14.6 KB/s` 显示成「十几 M」——空闲时 Telegram/Edge 的 keepalive 就表现为"没程序在用网却显示几M"。改为按字节正确换算的 `FmtBytes`
+  - **修复内核重启后的偶发假高速率**：差分基线字典原先只用 connstat 的 id 做键，而 id 在内核重启后从 1 重新计数（切节点、开关 TUN 都会重启内核），且与 sing-box 回退路径共用；基线键改为 `id|目标地址`，同时首次采样不再把累计值当成速率
+  - **修复速度/流量列排序**：这四列绑的是格式化字符串，DataGrid 按字典序排（`900.0 B/s` 排在 `1.5 KB/s` 上面）。模型新增数值排序键 `DownSpeedVal/UpSpeedVal/DownTotalVal/UpTotalVal`，列用 `SortMemberPath` 把"显示"与"排序"分离，文字一字不变；「时长」列改按真实秒数 `Time` 排（原来绑 `"hh:mm:ss"`，只因零填充才碰巧正确，跨 24 小时即错序）
+  - **流量/时长列首次点击即降序**：WPF 首次点列头固定升序，第一下变成"最小流量在上"。`Sorting` 事件仅在首点（`SortDirection == null`）接管为降序，第二次起完全交回 DataGrid 自己翻转；主机/入站/出站/网络列不受影响
+  - **进程列悬停显示查询输入**：内核 connstat 新增 `src` 字段（`network srcIP:srcPort -> dstIP:dstPort`），进程名为空或为 `LOOKUP-FAILED` 时可直接悬停查看反查依据
 - **2026-09-27（v6.1）**：DNS 过滤默认值改为**「应用连接（非DNS）」**——默认隐藏内核 DNS 通道噪音，需要看 DNS 解析时手动切回「DNS 流量」或「全部连接」
 - **2026-09-27（v6）**
   - **DNS 流量过滤**：新增三档筛选——**全部连接 / 仅 DNS 流量 / 仅应用连接（非 DNS）**。DNS 判定规则：目标端口 `:53`，或入站/出站 tag 属于内核 DNS 通道（`dns` 出站、`dns-module` DoH 入站、`direct-dns-N` 直连 DNS 入站）

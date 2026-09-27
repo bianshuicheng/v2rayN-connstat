@@ -87,7 +87,9 @@
                     Header="{x:Static resx:ResUI.TbSortingProcess}">
                     <base:MyDGTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel
+                                Orientation="Horizontal"
+                                ToolTip="{Binding Src}">
                                 <Image
                                     Width="16"
                                     Height="16"
@@ -102,22 +104,26 @@
                     Width="90"
                     Binding="{Binding DownSpeed}"
                     ExName="DownSpeed"
-                    Header="{x:Static resx:ResUI.TbSortingDownSpeed}" />
+                    Header="{x:Static resx:ResUI.TbSortingDownSpeed}"
+                    SortMemberPath="DownSpeedVal" />
                 <base:MyDGTextColumn
                     Width="90"
                     Binding="{Binding UpSpeed}"
                     ExName="UpSpeed"
-                    Header="{x:Static resx:ResUI.TbSortingUpSpeed}" />
+                    Header="{x:Static resx:ResUI.TbSortingUpSpeed}"
+                    SortMemberPath="UpSpeedVal" />
                 <base:MyDGTextColumn
                     Width="110"
                     Binding="{Binding DownTotal}"
                     ExName="DownTotal"
-                    Header="{x:Static resx:ResUI.TbSortingDownTraffic}" />
+                    Header="{x:Static resx:ResUI.TbSortingDownTraffic}"
+                    SortMemberPath="DownTotalVal" />
                 <base:MyDGTextColumn
                     Width="110"
                     Binding="{Binding UpTotal}"
                     ExName="UpTotal"
-                    Header="{x:Static resx:ResUI.TbSortingUpTraffic}" />
+                    Header="{x:Static resx:ResUI.TbSortingUpTraffic}"
+                    SortMemberPath="UpTotalVal" />
                 <base:MyDGTextColumn
                     Width="90"
                     Binding="{Binding Network}"
@@ -137,7 +143,8 @@
                     Width="100"
                     Binding="{Binding Elapsed}"
                     ExName="Elapsed"
-                    Header="{x:Static resx:ResUI.TbSortingTime}" />
+                    Header="{x:Static resx:ResUI.TbSortingTime}"
+                    SortMemberPath="Time" />
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

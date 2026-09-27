@@ -88,19 +88,26 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
         var liveIds = new HashSet<string>();
         foreach (var item in connlist)
         {
+            var host = item.dest ?? string.Empty;
+            // the core's connection id restarts from 1 on every core restart,
+            // and the sing-box fallback below shares these dictionaries, so the
+            // baseline key must carry the destination as well
             var idStr = item.id.ToString();
-            liveIds.Add(idStr);
-            if (!_firstSeen.TryGetValue(idStr, out var start))
+            var key = $"{idStr}|{host}";
+            liveIds.Add(key);
+            var seen = _last.ContainsKey(key);
+            if (!_firstSeen.TryGetValue(key, out var start))
             {
                 start = dtNow;
-                _firstSeen[idStr] = start;
+                _firstSeen[key] = start;
             }
-            var (lastUp, lastDown) = _last.GetValueOrDefault(idStr, ((ulong)0, (ulong)0));
-            var upSpeed = item.uplink >= lastUp ? item.uplink - lastUp : 0;
-            var downSpeed = item.downlink >= lastDown ? item.downlink - lastDown : 0;
-            _last[idStr] = (item.uplink, item.downlink);
+            var (lastUp, lastDown) = _last.GetValueOrDefault(key, ((ulong)0, (ulong)0));
+            // on the first sight of a connection the cumulative counters must
+            // not be shown as a per-second rate
+            var upSpeed = seen && item.uplink >= lastUp ? item.uplink - lastUp : 0;
+            var downSpeed = seen && item.downlink >= lastDown ? item.downlink - lastDown : 0;
+            _last[key] = (item.uplink, item.downlink);
 
-            var host = item.dest ?? string.Empty;
             var isDns = IsDnsConnection(item.inbound, item.outbound, host);
             if (HostFilter.IsNotEmpty() && !host.Contains(HostFilter))
             {
@@ -124,11 +131,16 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
                 Outbound = item.outbound,
                 Process = item.process,
                 ProcessPath = item.path,
+                Src = item.src,
                 IsDns = isDns,
-                DownSpeed = Utils.HumanFy((long)downSpeed) + "/s",
-                UpSpeed = Utils.HumanFy((long)upSpeed) + "/s",
-                DownTotal = Utils.HumanFy((long)item.downlink),
-                UpTotal = Utils.HumanFy((long)item.uplink),
+                DownSpeed = FmtBytes(downSpeed) + "/s",
+                UpSpeed = FmtBytes(upSpeed) + "/s",
+                DownTotal = FmtBytes(item.downlink),
+                UpTotal = FmtBytes(item.uplink),
+                DownSpeedVal = downSpeed,
+                UpSpeedVal = upSpeed,
+                DownTotalVal = item.downlink,
+                UpTotalVal = item.uplink,
                 Time = (dtNow - start).TotalSeconds < 0 ? 1 : (dtNow - start).TotalSeconds,
                 Elapsed = (dtNow - start).ToString(@"hh\:mm\:ss"),
             });
@@ -162,18 +174,21 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
             {
                 continue;
             }
-            liveIds.Add(idStr);
-            if (!_firstSeen.TryGetValue(idStr, out var start))
+            var host = $"{(item.metadata.host.IsNullOrEmpty() ? item.metadata.destinationIP : item.metadata.host)}:{item.metadata.destinationPort}";
+            // shared baselines with the connstat path: keep the key unique
+            var key = $"{idStr}|{host}";
+            liveIds.Add(key);
+            var seen = _last.ContainsKey(key);
+            if (!_firstSeen.TryGetValue(key, out var start))
             {
                 start = item.start;
-                _firstSeen[idStr] = start;
+                _firstSeen[key] = start;
             }
-            var (lastUp, lastDown) = _last.GetValueOrDefault(idStr, ((ulong)0, (ulong)0));
-            var upSpeed = item.upload >= lastUp ? item.upload - lastUp : 0;
-            var downSpeed = item.download >= lastDown ? item.download - lastDown : 0;
-            _last[idStr] = (item.upload, item.download);
+            var (lastUp, lastDown) = _last.GetValueOrDefault(key, ((ulong)0, (ulong)0));
+            var upSpeed = seen && item.upload >= lastUp ? item.upload - lastUp : 0;
+            var downSpeed = seen && item.download >= lastDown ? item.download - lastDown : 0;
+            _last[key] = (item.upload, item.download);
 
-            var host = $"{(item.metadata.host.IsNullOrEmpty() ? item.metadata.destinationIP : item.metadata.host)}:{item.metadata.destinationPort}";
             var isDns = IsDnsConnection(null, null, host);
             if (HostFilter.IsNotEmpty() && !host.Contains(HostFilter))
             {
@@ -199,10 +214,14 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
                 Process = item.metadata.process,
                 ProcessPath = item.metadata.processPath,
                 IsDns = isDns,
-                DownSpeed = Utils.HumanFy((long)downSpeed) + "/s",
-                UpSpeed = Utils.HumanFy((long)upSpeed) + "/s",
-                DownTotal = Utils.HumanFy((long)item.download),
-                UpTotal = Utils.HumanFy((long)item.upload),
+                DownSpeed = FmtBytes(downSpeed) + "/s",
+                UpSpeed = FmtBytes(upSpeed) + "/s",
+                DownTotal = FmtBytes(item.download),
+                UpTotal = FmtBytes(item.upload),
+                DownSpeedVal = downSpeed,
+                UpSpeedVal = upSpeed,
+                DownTotalVal = item.download,
+                UpTotalVal = item.upload,
                 Time = (dtNow - start).TotalSeconds < 0 ? 1 : (dtNow - start).TotalSeconds,
                 Elapsed = (dtNow - start).ToString(@"hh\:mm\:ss"),
             });
@@ -225,6 +244,28 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
             _firstSeen.Remove(deadId);
             _last.Remove(deadId);
         }
+    }
+
+    /// <summary>
+    /// Formats a byte count. Utils.HumanFy expects its argument in KB (see
+    /// StatisticsXrayService, which divides by linkBase=1024 before calling it),
+    /// so passing raw bytes there would inflate every value by 1024x.
+    /// </summary>
+    private static string FmtBytes(double bytes)
+    {
+        if (bytes < 1024)
+        {
+            return $"{(long)bytes} B";
+        }
+
+        string[] units = ["KB", "MB", "GB", "TB", "PB"];
+        var i = -1;
+        for (; bytes >= 1024 && i < units.Length - 1; i++)
+        {
+            bytes /= 1024;
+        }
+
+        return $"{bytes:f1} {units[i]}";
     }
 
     /// <summary>

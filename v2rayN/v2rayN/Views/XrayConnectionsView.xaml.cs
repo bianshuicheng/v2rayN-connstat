@@ -20,6 +20,7 @@ public partial class XrayConnectionsView
         _config = AppManager.Instance.Config;
 
         btnAutofitColumnWidth.Click += BtnAutofitColumnWidth_Click;
+        lstConnections.Sorting += LstConnections_Sorting;
         foreach (var col in lstConnections.Columns)
         {
             // DataGridColumn has no public ColumnDisplayIndexChanged event;
@@ -69,6 +70,36 @@ public partial class XrayConnectionsView
         {
             Logging.SaveLog(_tag, ex);
         }
+    }
+
+    // Sort keys whose first header click must mean "biggest on top".
+    private static readonly string[] _descFirstSortKeys =
+        ["DownSpeedVal", "UpSpeedVal", "DownTotalVal", "UpTotalVal", "Time"];
+
+    /// <summary>
+    /// WPF always opens a column sort ascending, which for the traffic and
+    /// duration columns puts the smallest value first - the opposite of what
+    /// reading a connection list means. Only the opening click is taken over
+    /// (SortDirection is still null then); from the second click on, DataGrid
+    /// toggles Ascending/Descending by itself and this handler stays out of it.
+    /// </summary>
+    private void LstConnections_Sorting(object sender, DataGridSortingEventArgs e)
+    {
+        var key = (e.Column as DataGridBoundColumn)?.SortMemberPath;
+        if (string.IsNullOrEmpty(key)
+            || !_descFirstSortKeys.Contains(key)
+            || e.Column.SortDirection != null)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        // DataGrid returns early once Handled is set, so the column state that
+        // its own Sort() would have written has to be written here as well -
+        // otherwise the next click would compute the wrong next direction.
+        e.Column.SortDirection = ListSortDirection.Descending;
+        lstConnections.Items.SortDescriptions.Clear();
+        lstConnections.Items.SortDescriptions.Add(new SortDescription(key, ListSortDirection.Descending));
     }
 
     private static string? ColName(DataGridColumn col) => col switch
