@@ -49,7 +49,7 @@ jobs:
           dotnet-version: 10.0.1xx
 
       - name: Setup Go for patched xray core
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: xray-core-connstat/go.mod
           cache-dependency-path: xray-core-connstat/go.sum
