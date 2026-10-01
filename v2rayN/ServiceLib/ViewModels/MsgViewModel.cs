@@ -30,6 +30,17 @@ public partial class MsgViewModel : MyReactiveObject
           y => y == true)
               .Subscribe(c => _config.MsgUIItem.AutoRefresh = AutoRefresh);
 
+        // Lifetime default sink. MsgView registers the real UI handler while active and
+        // disposes it on deactivate; once that happens every append used to throw
+        // "no registration", which HandleSafe fed back as a new message - an exception
+        // loop with full stack traces per core log line. This handler keeps appends
+        // landing in the queue (bounded by NumMaxMsg) until the view reactivates and
+        // FlushQueueMsg drains it.
+        DispatcherShowMsgInteraction.RegisterHandler(interaction =>
+        {
+            interaction.SetOutput(RxVoid.Default);
+        });
+
         AppEvents.SendMsgViewRequested
          .AsObservable()
          //.ObserveOn(RxSchedulers.MainThreadScheduler)
