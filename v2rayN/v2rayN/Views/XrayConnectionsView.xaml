@@ -108,13 +108,6 @@
                 Style="{StaticResource ToolbarTextBlock}" />
         </WrapPanel>
 
-        <TextBlock
-            x:Name="txtNotice"
-            Margin="{StaticResource Margin8}"
-            DockPanel.Dock="Top"
-            Style="{StaticResource ToolbarTextBlock}"
-            TextWrapping="Wrap" />
-
         <DataGrid
             x:Name="lstRows"
             AutoGenerateColumns="False"

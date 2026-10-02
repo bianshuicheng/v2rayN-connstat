@@ -115,10 +115,16 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
     {
         _flows = [];
         Rebuild();
-        Summary = string.Empty;
+        Notice = AppManager.Instance.IsRunningCore(ECoreType.Xray) ? string.Empty : ResUI.TbXrayNotXrayCore;
         KernelMemory = string.Empty;
         KernelMemoryDetail = string.Empty;
-        Notice = AppManager.Instance.IsRunningCore(ECoreType.Xray) ? string.Empty : ResUI.TbXrayNotXrayCore;
+        SetSummary(string.Empty);
+    }
+
+    /// <summary>汇总行同时承担提示职责：有提示（如非 Xray 内核/暂无数据）时优先显示提示。</summary>
+    private void SetSummary(string text)
+    {
+        Summary = string.IsNullOrEmpty(Notice) ? text : Notice;
     }
 
     /// <summary>
@@ -137,8 +143,8 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
         {
             row.ClearIdle();
         }
-        Summary = string.Format(ResUI.TbXraySummary, 0, XraySpeedText.HumanBps(0), XraySpeedText.HumanBps(0));
         Notice = _failures > 3 ? ResUI.TbXrayNoData : string.Empty;
+        SetSummary(string.Format(ResUI.TbXraySummary, 0, XraySpeedText.HumanBps(0), XraySpeedText.HumanBps(0)));
     }
 
     private void Apply(XrayFlowVars vars)
@@ -152,10 +158,10 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
         Rebuild();
 
         var totals = vars.flowwatch?.totals;
-        Summary = string.Format(ResUI.TbXraySummary,
+        SetSummary(string.Format(ResUI.TbXraySummary,
             totals?.flows ?? 0,
             XraySpeedText.HumanBps(totals?.upBps ?? 0),
-            XraySpeedText.HumanBps(totals?.downBps ?? 0));
+            XraySpeedText.HumanBps(totals?.downBps ?? 0)));
         KernelMemory = BuildKernelMemory(vars.memstats);
         KernelMemoryDetail = BuildKernelMemoryDetail(vars.memstats);
     }
