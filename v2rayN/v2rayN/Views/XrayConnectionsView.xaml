@@ -2,15 +2,14 @@
     x:Class="v2rayN.Views.XrayConnectionsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:base="clr-namespace:v2rayN.Base"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveui="http://reactiveui.net"
     xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="600"
+    d:DesignWidth="900"
     x:TypeArguments="vms:XrayConnectionsViewModel"
     mc:Ignorable="d">
 
@@ -21,27 +20,65 @@
             DockPanel.Dock="Top"
             Orientation="Horizontal">
 
+            <RadioButton
+                x:Name="rbTabActive"
+                Margin="{StaticResource MarginLeftRight4}"
+                VerticalAlignment="Center"
+                Content="{x:Static resx:ResUI.TbXrayOpen}"
+                GroupName="xrayConnTab"
+                IsChecked="True" />
+            <RadioButton
+                x:Name="rbTabClosed"
+                Margin="{StaticResource MarginLeftRight4}"
+                VerticalAlignment="Center"
+                Content="{x:Static resx:ResUI.TbXrayClosed}"
+                GroupName="xrayConnTab" />
+
+            <TextBlock
+                Margin="{StaticResource MarginLeftRight8}"
+                VerticalAlignment="Center"
+                Style="{StaticResource ToolbarTextBlock}"
+                Text="{x:Static resx:ResUI.TbXrayGroupBy}" />
+            <ComboBox
+                x:Name="cmbGroupKind"
+                Width="120"
+                Margin="{StaticResource MarginLeftRight8}"
+                VerticalAlignment="Center"
+                Style="{StaticResource DefComboBox}">
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbXrayGroupByApp}" />
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbXrayGroupByTarget}" />
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbXrayGroupByOutbound}" />
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbXrayGroupByInbound}" />
+                <ComboBoxItem Content="{x:Static resx:ResUI.TbXrayGroupByConnection}" />
+            </ComboBox>
+
             <TextBox
-                x:Name="txtHostFilter"
-                Width="200"
+                x:Name="txtFilter"
+                Width="180"
                 Margin="{StaticResource MarginLeftRight8}"
                 VerticalContentAlignment="Center"
-                materialDesign:HintAssist.Hint="{x:Static resx:ResUI.ConnectionsHostFilterTitle}"
+                materialDesign:HintAssist.Hint="{x:Static resx:ResUI.TbXrayFilter}"
                 materialDesign:TextFieldAssist.HasClearButton="True"
                 Style="{StaticResource DefTextBox}" />
 
-            <ComboBox
-                x:Name="cmbDnsFilter"
-                Width="150"
+            <Button
+                x:Name="btnExpandAll"
+                Width="24"
+                Height="24"
                 Margin="{StaticResource MarginLeftRight8}"
-                VerticalContentAlignment="Center"
-                SelectedValuePath="Tag"
-                Style="{StaticResource DefComboBox}"
-                ToolTip="{x:Static resx:ResUI.TbDnsFilterDns}">
-                <ComboBoxItem Content="{x:Static resx:ResUI.TbDnsFilterAll}" Tag="all" />
-                <ComboBoxItem Content="{x:Static resx:ResUI.TbDnsFilterDns}" Tag="dns" />
-                <ComboBoxItem Content="{x:Static resx:ResUI.TbDnsFilterApp}" Tag="app" />
-            </ComboBox>
+                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                ToolTip="{x:Static resx:ResUI.TbXrayExpandAll}">
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="TrendingDown" />
+            </Button>
+            <Button
+                x:Name="btnCollapseAll"
+                Width="24"
+                Height="24"
+                Margin="{StaticResource MarginLeftRight8}"
+                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                ToolTip="{x:Static resx:ResUI.TbXrayCollapseAll}">
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="TrendingUp" />
+            </Button>
 
             <Button
                 x:Name="btnAutofitColumnWidth"
@@ -62,10 +99,31 @@
                 x:Name="togAutoRefresh"
                 Margin="{StaticResource MarginLeftRight8}"
                 HorizontalAlignment="Left" />
+
+            <TextBlock
+                x:Name="txtSummary"
+                MinWidth="220"
+                Margin="{StaticResource MarginLeftRight8}"
+                VerticalAlignment="Center"
+                Style="{StaticResource ToolbarTextBlock}" />
+
+            <TextBlock
+                x:Name="txtKernelMemory"
+                MinWidth="260"
+                Margin="{StaticResource MarginLeftRight8}"
+                VerticalAlignment="Center"
+                Style="{StaticResource ToolbarTextBlock}" />
         </WrapPanel>
 
+        <TextBlock
+            x:Name="txtNotice"
+            Margin="{StaticResource Margin8}"
+            DockPanel.Dock="Top"
+            Style="{StaticResource ToolbarTextBlock}"
+            TextWrapping="Wrap" />
+
         <DataGrid
-            x:Name="lstConnections"
+            x:Name="lstRows"
             AutoGenerateColumns="False"
             BorderThickness="1"
             CanUserAddRows="False"
@@ -74,77 +132,139 @@
             GridLinesVisibility="All"
             HeadersVisibility="Column"
             IsReadOnly="True"
+            SelectionMode="Single"
             Style="{StaticResource DefDataGrid}">
             <DataGrid.Columns>
-                <base:MyDGTextColumn
-                    Width="300"
-                    Binding="{Binding Host}"
-                    ExName="Host"
-                    Header="{x:Static resx:ResUI.TbSortingHost}" />
-                <base:MyDGTemplateColumn
-                    Width="180"
-                    ExName="Process"
-                    Header="{x:Static resx:ResUI.TbSortingProcess}">
-                    <base:MyDGTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn
+                    Width="28"
+                    Header=""
+                    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel
-                                Orientation="Horizontal"
-                                ToolTip="{Binding Src}">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                Text="{Binding Marker}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn
+                    Width="240"
+                    Header="{x:Static resx:ResUI.TbXrayApp}"
+                    SortMemberPath="Program">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Style.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsGroup}"
+                                                Value="False">
+                                                <Setter Property="Margin" Value="22,0,0,0" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
                                 <Image
                                     Width="16"
                                     Height="16"
-                                    Margin="0,0,4,0"
-                                    Source="{Binding ProcessPath, Converter={StaticResource ProcessIconConverter}}" />
-                                <TextBlock VerticalAlignment="Center" Text="{Binding Process}" />
+                                    Margin="{StaticResource MarginRight8}"
+                                    VerticalAlignment="Center"
+                                    Source="{Binding IconPath, Converter={StaticResource XrayIconConverter}}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Program}"
+                                    TextTrimming="CharacterEllipsis">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding IsGroup}"
+                                                    Value="True">
+                                                    <Setter Property="FontWeight" Value="Bold" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </StackPanel>
                         </DataTemplate>
-                    </base:MyDGTemplateColumn.CellTemplate>
-                </base:MyDGTemplateColumn>
-                <base:MyDGTextColumn
-                    Width="90"
-                    Binding="{Binding DownSpeed}"
-                    ExName="DownSpeed"
-                    Header="{x:Static resx:ResUI.TbSortingDownSpeed}"
-                    SortMemberPath="DownSpeedVal" />
-                <base:MyDGTextColumn
-                    Width="90"
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn
+                    Width="260"
+                    Binding="{Binding TargetHost}"
+                    Header="{x:Static resx:ResUI.TbXrayHost}"
+                    SortMemberPath="TargetHost" />
+
+                <DataGridTextColumn
+                    Width="110"
                     Binding="{Binding UpSpeed}"
-                    ExName="UpSpeed"
-                    Header="{x:Static resx:ResUI.TbSortingUpSpeed}"
-                    SortMemberPath="UpSpeedVal" />
-                <base:MyDGTextColumn
+                    Header="{x:Static resx:ResUI.TbXrayUpSpeed}"
+                    SortMemberPath="UpBps" />
+                <DataGridTextColumn
                     Width="110"
-                    Binding="{Binding DownTotal}"
-                    ExName="DownTotal"
-                    Header="{x:Static resx:ResUI.TbSortingDownTraffic}"
-                    SortMemberPath="DownTotalVal" />
-                <base:MyDGTextColumn
-                    Width="110"
+                    Binding="{Binding DownSpeed}"
+                    Header="{x:Static resx:ResUI.TbXrayDownSpeed}"
+                    SortMemberPath="DownBps" />
+                <DataGridTextColumn
+                    Width="100"
                     Binding="{Binding UpTotal}"
-                    ExName="UpTotal"
-                    Header="{x:Static resx:ResUI.TbSortingUpTraffic}"
-                    SortMemberPath="UpTotalVal" />
-                <base:MyDGTextColumn
+                    Header="{x:Static resx:ResUI.TbXrayUpTotal}"
+                    SortMemberPath="Uplink" />
+                <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding DownTotal}"
+                    Header="{x:Static resx:ResUI.TbXrayDownTotal}"
+                    SortMemberPath="Downlink" />
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Connections}"
+                    Header="{x:Static resx:ResUI.TbXrayFlows}"
+                    SortMemberPath="Connections" />
+                <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding Pids}"
+                    Header="{x:Static resx:ResUI.TbXrayPids}" />
+                <DataGridTextColumn
+                    Width="80"
+                    Binding="{Binding Domains}"
+                    Header="{x:Static resx:ResUI.TbXrayDomainCount}"
+                    SortMemberPath="Domains" />
+                <DataGridTextColumn
                     Width="90"
-                    Binding="{Binding Network}"
-                    ExName="Network"
-                    Header="{x:Static resx:ResUI.TbSortingNetwork}" />
-                <base:MyDGTextColumn
-                    Width="110"
                     Binding="{Binding Inbound}"
-                    ExName="Inbound"
-                    Header="{x:Static resx:ResUI.TbSortingInbound}" />
-                <base:MyDGTextColumn
+                    Header="{x:Static resx:ResUI.TbXrayInbound}" />
+                <DataGridTextColumn
                     Width="110"
                     Binding="{Binding Outbound}"
-                    ExName="Outbound"
-                    Header="{x:Static resx:ResUI.TbSortingOutbound}" />
-                <base:MyDGTextColumn
-                    Width="100"
-                    Binding="{Binding Elapsed}"
-                    ExName="Elapsed"
-                    Header="{x:Static resx:ResUI.TbSortingTime}"
-                    SortMemberPath="Time" />
+                    Header="{x:Static resx:ResUI.TbXrayOutbound}" />
+                <DataGridTextColumn
+                    Width="60"
+                    Binding="{Binding Network}"
+                    Header="{x:Static resx:ResUI.TbXrayNet}" />
+                <DataGridTextColumn
+                    Width="80"
+                    Binding="{Binding Detected}"
+                    Header="{x:Static resx:ResUI.TbXrayDetected}" />
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Source}"
+                    Header="{x:Static resx:ResUI.TbXraySource}" />
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Age}"
+                    Header="{x:Static resx:ResUI.TbXrayAge}" />
+                <DataGridTextColumn
+                    Width="80"
+                    Binding="{Binding State}"
+                    Header="{x:Static resx:ResUI.TbXrayState}" />
+                <DataGridTextColumn
+                    Width="400"
+                    Binding="{Binding Exe}"
+                    Header="{x:Static resx:ResUI.TbXrayExe}" />
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

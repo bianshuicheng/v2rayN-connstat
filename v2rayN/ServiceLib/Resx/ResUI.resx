@@ -1197,27 +1197,6 @@
   <data name="TbConnections" xml:space="preserve">
     <value>Connections</value>
   </data>
-  <data name="TbXrayConnections" xml:space="preserve">
-    <value>Xray Connections</value>
-  </data>
-  <data name="TbSortingInbound" xml:space="preserve">
-    <value>Inbound</value>
-  </data>
-  <data name="TbSortingOutbound" xml:space="preserve">
-    <value>Outbound</value>
-  </data>
-  <data name="TbSortingProcess" xml:space="preserve">
-    <value>Process</value>
-  </data>
-  <data name="TbDnsFilterAll" xml:space="preserve">
-    <value>All connections</value>
-  </data>
-  <data name="TbDnsFilterDns" xml:space="preserve">
-    <value>DNS traffic</value>
-  </data>
-  <data name="TbDnsFilterApp" xml:space="preserve">
-    <value>Apps (non-DNS)</value>
-  </data>
   <data name="menuConnectionClose" xml:space="preserve">
     <value>Close Connection</value>
   </data>
@@ -1892,5 +1871,131 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   </data>
   <data name="TbDNS" xml:space="preserve">
     <value>DNS</value>
+  </data>
+  <data name="TbXrayConnections" xml:space="preserve">
+    <value>Xray connections</value>
+  </data>
+  <data name="TbXrayEnable" xml:space="preserve">
+    <value>Show xray connections (live speed per program)</value>
+  </data>
+  <data name="TbXrayFilter" xml:space="preserve">
+    <value>Filter program</value>
+  </data>
+  <data name="TbXrayApp" xml:space="preserve">
+    <value>Program</value>
+  </data>
+  <data name="TbXrayPids" xml:space="preserve">
+    <value>PID</value>
+  </data>
+  <data name="TbXrayFlows" xml:space="preserve">
+    <value>Connections</value>
+  </data>
+  <data name="TbXrayTargets" xml:space="preserve">
+    <value>Domains</value>
+  </data>
+  <data name="TbXrayUpSpeed" xml:space="preserve">
+    <value>Up speed</value>
+  </data>
+  <data name="TbXrayDownSpeed" xml:space="preserve">
+    <value>Down speed</value>
+  </data>
+  <data name="TbXrayUpTotal" xml:space="preserve">
+    <value>Up total</value>
+  </data>
+  <data name="TbXrayDownTotal" xml:space="preserve">
+    <value>Down total</value>
+  </data>
+  <data name="TbXrayExe" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="TbXrayTarget" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <data name="TbXrayNet" xml:space="preserve">
+    <value>Net</value>
+  </data>
+  <data name="TbXrayDetected" xml:space="preserve">
+    <value>Sniffed</value>
+  </data>
+  <data name="TbXrayInbound" xml:space="preserve">
+    <value>Inbound</value>
+  </data>
+  <data name="TbXrayOutbound" xml:space="preserve">
+    <value>Outbound</value>
+  </data>
+  <data name="TbXraySource" xml:space="preserve">
+    <value>App endpoint</value>
+  </data>
+  <data name="TbXrayAge" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="TbXrayState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="TbXrayOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="TbXrayClosing" xml:space="preserve">
+    <value>Closing</value>
+  </data>
+  <data name="TbXrayClosed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="TbXrayUnresolved" xml:space="preserve">
+    <value>Unresolved</value>
+  </data>
+  <data name="TbXrayCoreMemory" xml:space="preserve">
+    <value>Core memory</value>
+  </data>
+  <data name="TbXrayGoHeap" xml:space="preserve">
+    <value>Go heap</value>
+  </data>
+  <data name="TbXrayGoSys" xml:space="preserve">
+    <value>Reserved</value>
+  </data>
+  <data name="TbXraySummary" xml:space="preserve">
+    <value>{0} connections    up {1}    down {2}</value>
+  </data>
+  <data name="TbXrayNoData" xml:space="preserve">
+    <value>No data: the xray core is not serving metrics. Enable the option and reconnect.</value>
+  </data>
+  <data name="TbXrayNotXrayCore" xml:space="preserve">
+    <value>The running core is not xray</value>
+  </data>
+  <data name="TbXrayGroupBy" xml:space="preserve">
+    <value>Group by</value>
+  </data>
+  <data name="TbXrayGroupByApp" xml:space="preserve">
+    <value>Program</value>
+  </data>
+  <data name="TbXrayGroupByTarget" xml:space="preserve">
+    <value>Domain / IP</value>
+  </data>
+  <data name="TbXrayGroupByOutbound" xml:space="preserve">
+    <value>Outbound</value>
+  </data>
+  <data name="TbXrayGroupByInbound" xml:space="preserve">
+    <value>Inbound</value>
+  </data>
+  <data name="TbXrayName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="TbXrayExpandAll" xml:space="preserve">
+    <value>Expand all</value>
+  </data>
+  <data name="TbXrayCollapseAll" xml:space="preserve">
+    <value>Collapse all</value>
+  </data>
+  <data name="TbXrayHost" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="TbXrayGroupByConnection" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="TbXrayDomainCount" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="TbXraySelf" xml:space="preserve">
+    <value>xray (core itself)</value>
   </data>
 </root>

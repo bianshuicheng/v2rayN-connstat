@@ -2924,69 +2924,6 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("TbConnections", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   查找类似 Xray Connections 的本地化字符串。
-        /// </summary>
-        public static string TbXrayConnections {
-            get {
-                return ResourceManager.GetString("TbXrayConnections", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 Inbound 的本地化字符串。
-        /// </summary>
-        public static string TbSortingInbound {
-            get {
-                return ResourceManager.GetString("TbSortingInbound", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 Outbound 的本地化字符串。
-        /// </summary>
-        public static string TbSortingOutbound {
-            get {
-                return ResourceManager.GetString("TbSortingOutbound", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 Process 的本地化字符串。
-        /// </summary>
-        public static string TbSortingProcess {
-            get {
-                return ResourceManager.GetString("TbSortingProcess", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 All connections 的本地化字符串。
-        /// </summary>
-        public static string TbDnsFilterAll {
-            get {
-                return ResourceManager.GetString("TbDnsFilterAll", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 DNS traffic 的本地化字符串。
-        /// </summary>
-        public static string TbDnsFilterDns {
-            get {
-                return ResourceManager.GetString("TbDnsFilterDns", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 Apps (non-DNS) 的本地化字符串。
-        /// </summary>
-        public static string TbDnsFilterApp {
-            get {
-                return ResourceManager.GetString("TbDnsFilterApp", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Core Type 的本地化字符串。
@@ -5376,6 +5313,258 @@ namespace ServiceLib.Resx {
         /// <summary>
         ///   查找类似 Upgrade App does not exist 的本地化字符串。
         /// </summary>
+        public static string TbXrayConnections {
+            get {
+                return ResourceManager.GetString("TbXrayConnections", resourceCulture);
+            }
+        }
+
+        public static string TbXrayEnable {
+            get {
+                return ResourceManager.GetString("TbXrayEnable", resourceCulture);
+            }
+        }
+
+        public static string TbXrayFilter {
+            get {
+                return ResourceManager.GetString("TbXrayFilter", resourceCulture);
+            }
+        }
+
+        public static string TbXrayApp {
+            get {
+                return ResourceManager.GetString("TbXrayApp", resourceCulture);
+            }
+        }
+
+        public static string TbXrayPids {
+            get {
+                return ResourceManager.GetString("TbXrayPids", resourceCulture);
+            }
+        }
+
+        public static string TbXrayFlows {
+            get {
+                return ResourceManager.GetString("TbXrayFlows", resourceCulture);
+            }
+        }
+
+        public static string TbXrayTargets {
+            get {
+                return ResourceManager.GetString("TbXrayTargets", resourceCulture);
+            }
+        }
+
+        public static string TbXrayUpSpeed {
+            get {
+                return ResourceManager.GetString("TbXrayUpSpeed", resourceCulture);
+            }
+        }
+
+        public static string TbXrayDownSpeed {
+            get {
+                return ResourceManager.GetString("TbXrayDownSpeed", resourceCulture);
+            }
+        }
+
+        public static string TbXrayUpTotal {
+            get {
+                return ResourceManager.GetString("TbXrayUpTotal", resourceCulture);
+            }
+        }
+
+        public static string TbXrayDownTotal {
+            get {
+                return ResourceManager.GetString("TbXrayDownTotal", resourceCulture);
+            }
+        }
+
+        public static string TbXrayExe {
+            get {
+                return ResourceManager.GetString("TbXrayExe", resourceCulture);
+            }
+        }
+
+        public static string TbXrayTarget {
+            get {
+                return ResourceManager.GetString("TbXrayTarget", resourceCulture);
+            }
+        }
+
+        public static string TbXrayNet {
+            get {
+                return ResourceManager.GetString("TbXrayNet", resourceCulture);
+            }
+        }
+
+        public static string TbXrayDetected {
+            get {
+                return ResourceManager.GetString("TbXrayDetected", resourceCulture);
+            }
+        }
+
+        public static string TbXrayInbound {
+            get {
+                return ResourceManager.GetString("TbXrayInbound", resourceCulture);
+            }
+        }
+
+        public static string TbXrayOutbound {
+            get {
+                return ResourceManager.GetString("TbXrayOutbound", resourceCulture);
+            }
+        }
+
+        public static string TbXraySource {
+            get {
+                return ResourceManager.GetString("TbXraySource", resourceCulture);
+            }
+        }
+
+        public static string TbXrayAge {
+            get {
+                return ResourceManager.GetString("TbXrayAge", resourceCulture);
+            }
+        }
+
+        public static string TbXrayState {
+            get {
+                return ResourceManager.GetString("TbXrayState", resourceCulture);
+            }
+        }
+
+        public static string TbXrayOpen {
+            get {
+                return ResourceManager.GetString("TbXrayOpen", resourceCulture);
+            }
+        }
+
+        public static string TbXrayClosing {
+            get {
+                return ResourceManager.GetString("TbXrayClosing", resourceCulture);
+            }
+        }
+
+        public static string TbXrayClosed {
+            get {
+                return ResourceManager.GetString("TbXrayClosed", resourceCulture);
+            }
+        }
+
+        public static string TbXrayUnresolved {
+            get {
+                return ResourceManager.GetString("TbXrayUnresolved", resourceCulture);
+            }
+        }
+
+        public static string TbXrayCoreMemory {
+            get {
+                return ResourceManager.GetString("TbXrayCoreMemory", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGoHeap {
+            get {
+                return ResourceManager.GetString("TbXrayGoHeap", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGoSys {
+            get {
+                return ResourceManager.GetString("TbXrayGoSys", resourceCulture);
+            }
+        }
+
+        public static string TbXraySummary {
+            get {
+                return ResourceManager.GetString("TbXraySummary", resourceCulture);
+            }
+        }
+
+        public static string TbXrayNoData {
+            get {
+                return ResourceManager.GetString("TbXrayNoData", resourceCulture);
+            }
+        }
+
+        public static string TbXrayNotXrayCore {
+            get {
+                return ResourceManager.GetString("TbXrayNotXrayCore", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGroupBy {
+            get {
+                return ResourceManager.GetString("TbXrayGroupBy", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGroupByApp {
+            get {
+                return ResourceManager.GetString("TbXrayGroupByApp", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGroupByTarget {
+            get {
+                return ResourceManager.GetString("TbXrayGroupByTarget", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGroupByOutbound {
+            get {
+                return ResourceManager.GetString("TbXrayGroupByOutbound", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGroupByInbound {
+            get {
+                return ResourceManager.GetString("TbXrayGroupByInbound", resourceCulture);
+            }
+        }
+
+        public static string TbXrayName {
+            get {
+                return ResourceManager.GetString("TbXrayName", resourceCulture);
+            }
+        }
+
+        public static string TbXrayExpandAll {
+            get {
+                return ResourceManager.GetString("TbXrayExpandAll", resourceCulture);
+            }
+        }
+
+        public static string TbXrayCollapseAll {
+            get {
+                return ResourceManager.GetString("TbXrayCollapseAll", resourceCulture);
+            }
+        }
+
+        public static string TbXrayHost {
+            get {
+                return ResourceManager.GetString("TbXrayHost", resourceCulture);
+            }
+        }
+
+        public static string TbXrayGroupByConnection {
+            get {
+                return ResourceManager.GetString("TbXrayGroupByConnection", resourceCulture);
+            }
+        }
+
+        public static string TbXrayDomainCount {
+            get {
+                return ResourceManager.GetString("TbXrayDomainCount", resourceCulture);
+            }
+        }
+
+        public static string TbXraySelf {
+            get {
+                return ResourceManager.GetString("TbXraySelf", resourceCulture);
+            }
+        }
+
         public static string UpgradeAppNotExistTip {
             get {
                 return ResourceManager.GetString("UpgradeAppNotExistTip", resourceCulture);

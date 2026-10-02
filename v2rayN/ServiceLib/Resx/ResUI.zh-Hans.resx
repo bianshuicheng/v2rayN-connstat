@@ -1194,27 +1194,6 @@
   <data name="TbConnections" xml:space="preserve">
     <value>当前连接</value>
   </data>
-  <data name="TbXrayConnections" xml:space="preserve">
-    <value>Xray 连接</value>
-  </data>
-  <data name="TbSortingInbound" xml:space="preserve">
-    <value>入站</value>
-  </data>
-  <data name="TbSortingOutbound" xml:space="preserve">
-    <value>出站</value>
-  </data>
-  <data name="TbSortingProcess" xml:space="preserve">
-    <value>进程</value>
-  </data>
-  <data name="TbDnsFilterAll" xml:space="preserve">
-    <value>全部连接</value>
-  </data>
-  <data name="TbDnsFilterDns" xml:space="preserve">
-    <value>DNS 流量</value>
-  </data>
-  <data name="TbDnsFilterApp" xml:space="preserve">
-    <value>应用连接（非DNS）</value>
-  </data>
   <data name="menuConnectionClose" xml:space="preserve">
     <value>关闭连接</value>
   </data>
@@ -1893,5 +1872,131 @@
   </data>
   <data name="TbDNS" xml:space="preserve">
     <value>DNS</value>
+  </data>
+  <data name="TbXrayConnections" xml:space="preserve">
+    <value>xray连接</value>
+  </data>
+  <data name="TbXrayEnable" xml:space="preserve">
+    <value>显示xray连接（每个程序的实时网速）</value>
+  </data>
+  <data name="TbXrayFilter" xml:space="preserve">
+    <value>过滤程序</value>
+  </data>
+  <data name="TbXrayApp" xml:space="preserve">
+    <value>程序</value>
+  </data>
+  <data name="TbXrayPids" xml:space="preserve">
+    <value>PID</value>
+  </data>
+  <data name="TbXrayFlows" xml:space="preserve">
+    <value>连接数</value>
+  </data>
+  <data name="TbXrayTargets" xml:space="preserve">
+    <value>域名</value>
+  </data>
+  <data name="TbXrayUpSpeed" xml:space="preserve">
+    <value>实时上传</value>
+  </data>
+  <data name="TbXrayDownSpeed" xml:space="preserve">
+    <value>实时下载</value>
+  </data>
+  <data name="TbXrayUpTotal" xml:space="preserve">
+    <value>累计上传</value>
+  </data>
+  <data name="TbXrayDownTotal" xml:space="preserve">
+    <value>累计下载</value>
+  </data>
+  <data name="TbXrayExe" xml:space="preserve">
+    <value>程序路径</value>
+  </data>
+  <data name="TbXrayTarget" xml:space="preserve">
+    <value>目标</value>
+  </data>
+  <data name="TbXrayNet" xml:space="preserve">
+    <value>协议</value>
+  </data>
+  <data name="TbXrayDetected" xml:space="preserve">
+    <value>识别</value>
+  </data>
+  <data name="TbXrayInbound" xml:space="preserve">
+    <value>入站</value>
+  </data>
+  <data name="TbXrayOutbound" xml:space="preserve">
+    <value>出站</value>
+  </data>
+  <data name="TbXraySource" xml:space="preserve">
+    <value>应用端点</value>
+  </data>
+  <data name="TbXrayAge" xml:space="preserve">
+    <value>时长</value>
+  </data>
+  <data name="TbXrayState" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="TbXrayOpen" xml:space="preserve">
+    <value>活动</value>
+  </data>
+  <data name="TbXrayClosing" xml:space="preserve">
+    <value>关闭中</value>
+  </data>
+  <data name="TbXrayClosed" xml:space="preserve">
+    <value>已关闭</value>
+  </data>
+  <data name="TbXrayUnresolved" xml:space="preserve">
+    <value>未识别</value>
+  </data>
+  <data name="TbXrayCoreMemory" xml:space="preserve">
+    <value>内核内存</value>
+  </data>
+  <data name="TbXrayGoHeap" xml:space="preserve">
+    <value>Go堆</value>
+  </data>
+  <data name="TbXrayGoSys" xml:space="preserve">
+    <value>已保留</value>
+  </data>
+  <data name="TbXraySummary" xml:space="preserve">
+    <value>{0} 条连接    上传 {1}    下载 {2}</value>
+  </data>
+  <data name="TbXrayNoData" xml:space="preserve">
+    <value>没有取到数据：xray 内核未提供 metrics，请在选项中勾选“显示xray连接”后重新连接</value>
+  </data>
+  <data name="TbXrayNotXrayCore" xml:space="preserve">
+    <value>当前运行的不是 xray 内核</value>
+  </data>
+  <data name="TbXrayGroupBy" xml:space="preserve">
+    <value>分类</value>
+  </data>
+  <data name="TbXrayGroupByApp" xml:space="preserve">
+    <value>程序</value>
+  </data>
+  <data name="TbXrayGroupByTarget" xml:space="preserve">
+    <value>域名/IP</value>
+  </data>
+  <data name="TbXrayGroupByOutbound" xml:space="preserve">
+    <value>出站</value>
+  </data>
+  <data name="TbXrayGroupByInbound" xml:space="preserve">
+    <value>入站</value>
+  </data>
+  <data name="TbXrayName" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="TbXrayExpandAll" xml:space="preserve">
+    <value>展开全部</value>
+  </data>
+  <data name="TbXrayCollapseAll" xml:space="preserve">
+    <value>折叠全部</value>
+  </data>
+  <data name="TbXrayHost" xml:space="preserve">
+    <value>域名/IP</value>
+  </data>
+  <data name="TbXrayGroupByConnection" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="TbXrayDomainCount" xml:space="preserve">
+    <value>域名数</value>
+  </data>
+  <data name="TbXraySelf" xml:space="preserve">
+    <value>内核自身</value>
   </data>
 </root>
