@@ -404,26 +404,12 @@
                                             HorizontalAlignment="Center"
                                             Style="{StaticResource ToolbarTextBlock}"
                                             Text="{x:Static resx:ResUI.TbXrayConnections}" />
-                                        <!--  内核总占用内存：填在导航项下方的空白处，悬停看构成细节  -->
+                                        <!--  内核总占用内存：填在导航项下方的空白处，悬停看构成细节；文本由 code-behind 显式绑定  -->
                                         <TextBlock
+                                            x:Name="txtRailMem1"
                                             HorizontalAlignment="Center"
                                             FontSize="10"
-                                            Opacity="0.8"
-                                            ToolTip="{Binding XrayConnectionsViewModel.KernelMemoryDetail}"
-                                            Text="{Binding XrayConnectionsViewModel.KernelMemory}">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock" BasedOn="{StaticResource ToolbarTextBlock}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger
-                                                            Binding="{Binding XrayConnectionsViewModel.KernelMemory}"
-                                                            Value="">
-                                                            <Setter Property="Text" Value="" />
-                                                            <Setter Property="ToolTip" Value="{x:Null}" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                            Opacity="0.8" />
                                     </StackPanel>
                                 </TabItem.Header>
                             </TabItem>
@@ -487,26 +473,12 @@
                                             HorizontalAlignment="Center"
                                             Style="{StaticResource ToolbarTextBlock}"
                                             Text="{x:Static resx:ResUI.TbXrayConnections}" />
-                                        <!--  内核总占用内存：填在导航项下方的空白处，悬停看构成细节  -->
+                                        <!--  内核总占用内存：填在导航项下方的空白处，悬停看构成细节；文本由 code-behind 显式绑定  -->
                                         <TextBlock
+                                            x:Name="txtRailMem2"
                                             HorizontalAlignment="Center"
                                             FontSize="10"
-                                            Opacity="0.8"
-                                            ToolTip="{Binding XrayConnectionsViewModel.KernelMemoryDetail}"
-                                            Text="{Binding XrayConnectionsViewModel.KernelMemory}">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock" BasedOn="{StaticResource ToolbarTextBlock}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger
-                                                            Binding="{Binding XrayConnectionsViewModel.KernelMemory}"
-                                                            Value="">
-                                                            <Setter Property="Text" Value="" />
-                                                            <Setter Property="ToolTip" Value="{x:Null}" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                            Opacity="0.8" />
                                     </StackPanel>
                                 </TabItem.Header>
                             </TabItem>
