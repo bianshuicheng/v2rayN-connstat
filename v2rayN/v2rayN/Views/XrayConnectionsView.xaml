@@ -194,6 +194,7 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn
+                    x:Name="colTargetHost"
                     Width="260"
                     Binding="{Binding TargetHost}"
                     Header="{x:Static resx:ResUI.TbXrayHost}"

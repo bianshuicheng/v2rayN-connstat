@@ -22,6 +22,10 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
     [Reactive]
     public partial string KernelMemory { get; set; }
 
+    /// <summary>悬停提示：内核内存的构成细节（Go 堆 / Go 系统预留）。</summary>
+    [Reactive]
+    public partial string KernelMemoryDetail { get; set; }
+
     [Reactive]
     public partial string Notice { get; set; }
 
@@ -113,6 +117,7 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
         Rebuild();
         Summary = string.Empty;
         KernelMemory = string.Empty;
+        KernelMemoryDetail = string.Empty;
         Notice = AppManager.Instance.IsRunningCore(ECoreType.Xray) ? string.Empty : ResUI.TbXrayNotXrayCore;
     }
 
@@ -152,6 +157,7 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
             XraySpeedText.HumanBps(totals?.upBps ?? 0),
             XraySpeedText.HumanBps(totals?.downBps ?? 0));
         KernelMemory = BuildKernelMemory(vars.memstats);
+        KernelMemoryDetail = BuildKernelMemoryDetail(vars.memstats);
     }
 
     /// <summary>
@@ -611,20 +617,25 @@ public partial class XrayConnectionsViewModel : MyReactiveObject
         return index > 0 ? target[..index] : target;
     }
 
+    /// <summary>状态栏只显示一个总占用数值（工作集）；构成细节放悬停提示。</summary>
     private string BuildKernelMemory(XrayMemStats? mem)
     {
-        var parts = new List<string>();
         var workingSet = CoreManager.Instance.RunningCoreWorkingSet();
-        if (workingSet.HasValue)
+        return workingSet.HasValue ? XraySpeedText.HumanBytes(workingSet.Value) : string.Empty;
+    }
+
+    private string BuildKernelMemoryDetail(XrayMemStats? mem)
+    {
+        if (mem == null)
         {
-            parts.Add($"{ResUI.TbXrayCoreMemory} {XraySpeedText.HumanBytes(workingSet.Value)}");
-        }
-        if (mem != null)
-        {
-            parts.Add($"{ResUI.TbXrayGoHeap} {XraySpeedText.HumanBytes(mem.HeapAlloc)}");
-            parts.Add($"{ResUI.TbXrayGoSys} {XraySpeedText.HumanBytes(mem.Sys)}");
+            return string.Empty;
         }
 
-        return parts.Count > 0 ? string.Join("    ", parts) : string.Empty;
+        var parts = new List<string>
+        {
+            $"{ResUI.TbXrayGoHeap} {XraySpeedText.HumanBytes(mem.HeapAlloc)}",
+            $"{ResUI.TbXrayGoSys} {XraySpeedText.HumanBytes(mem.Sys)}"
+        };
+        return string.Join("    ", parts);
     }
 }
