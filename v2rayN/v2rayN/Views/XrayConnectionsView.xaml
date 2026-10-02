@@ -106,13 +106,6 @@
                 Margin="{StaticResource MarginLeftRight8}"
                 VerticalAlignment="Center"
                 Style="{StaticResource ToolbarTextBlock}" />
-
-            <TextBlock
-                x:Name="txtKernelMemory"
-                MinWidth="260"
-                Margin="{StaticResource MarginLeftRight8}"
-                VerticalAlignment="Center"
-                Style="{StaticResource ToolbarTextBlock}" />
         </WrapPanel>
 
         <TextBlock

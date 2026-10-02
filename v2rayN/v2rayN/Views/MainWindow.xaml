@@ -399,11 +399,31 @@
                             <TabItem x:Name="tabXrayConnections1">
                                 <TabItem.Header>
                                     <StackPanel>
-                                        <materialDesign:PackIcon HorizontalAlignment="Center" Kind="LanConnect" />
+                                        <materialDesign:PackIcon HorizontalAlignment="Center" Kind="Lan" />
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             Style="{StaticResource ToolbarTextBlock}"
                                             Text="{x:Static resx:ResUI.TbXrayConnections}" />
+                                        <!--  内核总占用内存：填在导航项下方的空白处，悬停看构成细节  -->
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            FontSize="10"
+                                            Opacity="0.8"
+                                            ToolTip="{Binding XrayConnectionsViewModel.KernelMemoryDetail}"
+                                            Text="{Binding XrayConnectionsViewModel.KernelMemory}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource ToolbarTextBlock}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger
+                                                            Binding="{Binding XrayConnectionsViewModel.KernelMemory}"
+                                                            Value="">
+                                                            <Setter Property="Text" Value="" />
+                                                            <Setter Property="ToolTip" Value="{x:Null}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                     </StackPanel>
                                 </TabItem.Header>
                             </TabItem>
@@ -462,11 +482,31 @@
                             <TabItem x:Name="tabXrayConnections2">
                                 <TabItem.Header>
                                     <StackPanel>
-                                        <materialDesign:PackIcon HorizontalAlignment="Center" Kind="LanConnect" />
+                                        <materialDesign:PackIcon HorizontalAlignment="Center" Kind="Lan" />
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             Style="{StaticResource ToolbarTextBlock}"
                                             Text="{x:Static resx:ResUI.TbXrayConnections}" />
+                                        <!--  内核总占用内存：填在导航项下方的空白处，悬停看构成细节  -->
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            FontSize="10"
+                                            Opacity="0.8"
+                                            ToolTip="{Binding XrayConnectionsViewModel.KernelMemoryDetail}"
+                                            Text="{Binding XrayConnectionsViewModel.KernelMemory}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource ToolbarTextBlock}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger
+                                                            Binding="{Binding XrayConnectionsViewModel.KernelMemory}"
+                                                            Value="">
+                                                            <Setter Property="Text" Value="" />
+                                                            <Setter Property="ToolTip" Value="{x:Null}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                     </StackPanel>
                                 </TabItem.Header>
                             </TabItem>

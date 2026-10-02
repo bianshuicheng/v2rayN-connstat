@@ -29,8 +29,9 @@ public partial class XrayConnectionsView
             this.Bind(ViewModel, vm => vm.TextFilter, v => v.txtFilter.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.AutoRefresh, v => v.togAutoRefresh.IsChecked).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.Summary, v => v.txtSummary.Text).DisposeWith(disposables);
-            this.OneWayBind(ViewModel, vm => vm.KernelMemory, v => v.txtKernelMemory.Text).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.Notice, v => v.txtNotice.Text).DisposeWith(disposables);
+
+            // 内核内存改到主窗口左侧导航的「Xray 连接」项下方显示，页面内不再重复
 
             // 程序分类下程序与域名/IP 已合并进同一列，主机列只在其余分组和已关闭页出现
             this.WhenAnyValue(x => x.ViewModel.GroupKind, x => x.ViewModel.ShowClosed)
@@ -41,11 +42,6 @@ public partial class XrayConnectionsView
                         ? Visibility.Visible
                         : Visibility.Collapsed;
                 })
-                .DisposeWith(disposables);
-
-            // 状态栏只留一个总占用数值，构成细节收进悬停提示
-            this.WhenAnyValue(x => x.ViewModel.KernelMemoryDetail)
-                .Subscribe(detail => txtKernelMemory.ToolTip = detail.IsNullOrEmpty() ? null : detail)
                 .DisposeWith(disposables);
         });
     }
